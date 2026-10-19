@@ -4,8 +4,9 @@ from datetime import datetime
 
 import requests
 from fastapi import FastAPI, Header, HTTPException
-from payrates import round_quarter, total_pay
 from pydantic import BaseModel
+
+from payrates import round_quarter, total_pay
 
 RECORDS = "http://records:8000"
 

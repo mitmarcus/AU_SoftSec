@@ -1,7 +1,7 @@
 import os
 import re
 import uuid
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 import jwt
 import requests
@@ -18,7 +18,7 @@ app = FastAPI()
 
 
 def make_token(claims, key, lifetime):
-    claims = {**claims, "exp": datetime.now(timezone.utc) + lifetime}
+    claims = {**claims, "exp": datetime.now(UTC) + lifetime}
     return jwt.encode(claims, key, algorithm="HS256")
 
 

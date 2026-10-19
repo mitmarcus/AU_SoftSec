@@ -1,5 +1,5 @@
 import os
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 import jwt
 import pytest
@@ -25,7 +25,7 @@ def job_token(sub="iza", month="2026-09", scope=("entries:read", "payslips:write
         "month": month,
         "scope": list(scope),
         "aud": aud,
-        "exp": datetime.now(timezone.utc) + timedelta(minutes=minutes),
+        "exp": datetime.now(UTC) + timedelta(minutes=minutes),
     }
     token = jwt.encode(claims, key or os.environ["RECORDS_JWT_KEY"], algorithm="HS256")
     return {"Authorization": f"Bearer {token}"}

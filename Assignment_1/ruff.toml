@@ -1,0 +1,5 @@
+line-length = 120
+
+[lint.flake8-bugbear]
+# FastAPI dependencies are declared as default arguments on purpose
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Header"]
