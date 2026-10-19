@@ -230,10 +230,8 @@ def store_payslip(month: str, body: Payslip, c=Depends(claims)):
 
 @app.get("/payslips")
 def download_payslip(file: str, c=Depends(cleaner)):
-    folder = (PAYSLIP_DIR / c["sub"]).resolve()
-    path = (folder / file).resolve()
-    # resolve() removes ../ so the check sees where the path really points
-    if not path.is_relative_to(folder) or not path.is_file():
+    path = PAYSLIP_DIR / c["sub"] / file  # VULN CWE-22: file is joined as given, so ../ leaves the cleaner's folder
+    if not path.is_file():
         raise HTTPException(404, "no such payslip")
     return FileResponse(path, media_type="text/csv")
 
