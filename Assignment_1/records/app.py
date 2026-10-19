@@ -204,16 +204,12 @@ class Payslip(BaseModel):
     content: str
 
 
-def job_cleaner(c, x_cleaner_id):
-    # payroll is on the internal network, so the header is trusted when present
-    return x_cleaner_id or c["sub"]  # VULN CWE-862: header overrides the cleaner in the verified token
-
-
 @app.get("/entries")
-def entries_for_job(month: str, c=Depends(claims), x_cleaner_id: str | None = Header(default=None)):
+def entries_for_job(month: str, c=Depends(claims)):
     check_month(month)
     job_token(c, "entries:read", month)
-    who = job_cleaner(c, x_cleaner_id)
+    # the cleaner comes only from the verified job token, never from a header or the body
+    who = c["sub"]
     with db() as conn:
         rate = conn.execute("SELECT hourly_rate FROM users WHERE username = ?", (who,)).fetchone()
         rows = conn.execute("SELECT start_time, end_time FROM entries WHERE cleaner = ? AND start_time LIKE ? AND end_time IS NOT NULL",
@@ -222,10 +218,10 @@ def entries_for_job(month: str, c=Depends(claims), x_cleaner_id: str | None = He
 
 
 @app.put("/payslips/{month}")
-def store_payslip(month: str, body: Payslip, c=Depends(claims), x_cleaner_id: str | None = Header(default=None)):
+def store_payslip(month: str, body: Payslip, c=Depends(claims)):
     check_month(month)
     job_token(c, "payslips:write", month)
-    who = job_cleaner(c, x_cleaner_id)
+    who = c["sub"]
     folder = PAYSLIP_DIR / who
     folder.mkdir(exist_ok=True)
     name = f"{who}-{month}.csv"

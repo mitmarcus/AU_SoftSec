@@ -114,7 +114,6 @@ def clock_out(job_id: int, body: Clock, user=Depends(current_user)):
 
 class PayslipRequest(BaseModel):
     month: str
-    cleaner_id: str | None = None
 
 
 @app.post("/payslips", status_code=201)
@@ -130,8 +129,7 @@ def generate_payslip(body: PayslipRequest, user=Depends(current_user)):
         "scope": ["entries:read", "payslips:write"],
         "aud": "records",
     }, RECORDS_KEY, timedelta(minutes=5))
-    cleaner_id = body.cleaner_id or user["sub"]  # VULN CWE-862: cleaner taken from the request body, not the JWT
-    resp = requests.post(f"{PAYROLL}/jobs", json={"month": body.month, "cleaner_id": cleaner_id},
+    resp = requests.post(f"{PAYROLL}/jobs", json={"month": body.month},
                          headers={"Authorization": f"Bearer {job_token}"}, timeout=30)
     return check(resp).json()
 
