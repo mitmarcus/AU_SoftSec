@@ -1,0 +1,26 @@
+services:
+  api:
+    build: ./api
+    ports:
+      - "8000:8000"
+    networks: [public, internal]
+
+  records:
+    build: ./records
+    volumes:
+      - records-data:/data
+    networks: [internal]
+
+  payroll:
+    build:
+      context: .
+      dockerfile: payroll/Dockerfile
+    networks: [internal]
+
+networks:
+  public:
+  internal:
+    internal: true  # no route out of the docker network
+
+volumes:
+  records-data:

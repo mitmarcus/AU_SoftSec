@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools==84.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "payrates"
+version = "0.1.0"
+description = "Pay calculation for cleaning shifts"
+requires-python = ">=3.12"
+
+[tool.setuptools]
+packages = ["payrates"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]

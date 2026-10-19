@@ -1,0 +1,1 @@
+payrates @ file:///wheels/payrates-0.1.0-py3-none-any.whl --hash=sha256:703d50fb28c85fe1142a84189931af90a1a6a5629b477f802f83253fb9f46218
