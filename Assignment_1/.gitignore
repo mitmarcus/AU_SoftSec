@@ -8,6 +8,6 @@ payrates/build/
 *.db
 .token
 .env
-junit.xml
 bandit.json
 pip-audit.json
+junit*.xml
