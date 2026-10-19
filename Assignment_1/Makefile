@@ -13,3 +13,6 @@ test:
 
 down:
 	docker compose down -v
+
+# needed because of conflicting targets with files of the same name
+.PHONY: build up seed test down
