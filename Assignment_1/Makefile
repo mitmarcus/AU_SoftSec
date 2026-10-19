@@ -9,7 +9,7 @@ seed:
 
 test:
 	python3 -m pytest payrates/tests
-	python3 -m pytest tests
+	docker compose run --rm tests
 
 down:
 	docker compose down -v

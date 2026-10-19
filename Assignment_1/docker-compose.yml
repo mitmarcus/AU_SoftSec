@@ -22,6 +22,16 @@ services:
       dockerfile: payroll/Dockerfile
     networks: [internal]
 
+  tests:
+    build: ./tests
+    profiles: [test]
+    environment:
+      API_JWT_KEY: ${API_JWT_KEY:-dev-only-api-key-change-me-0123456789}
+      RECORDS_JWT_KEY: ${RECORDS_JWT_KEY:-dev-only-records-key-change-me-012345}
+    volumes:
+      - ./tests:/tests:ro
+    networks: [internal]
+
 networks:
   public:
   internal:

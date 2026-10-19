@@ -1,6 +1,5 @@
 import requests
-
-API = "http://localhost:8000"
+from conftest import API
 
 
 def test_api_health():
