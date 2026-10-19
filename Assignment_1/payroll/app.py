@@ -1,6 +1,6 @@
 import csv
 import io
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import requests
 from fastapi import FastAPI, Header, HTTPException
@@ -9,6 +9,7 @@ from pydantic import BaseModel
 from payrates import round_quarter, total_pay
 
 RECORDS = "http://records:8000"
+MAX_SHIFT = timedelta(hours=12)
 
 app = FastAPI()
 
@@ -46,6 +47,10 @@ def run_job(job: Job, authorization: str = Header(default="")):
 
     shifts = [(datetime.fromisoformat(e["start_time"]), datetime.fromisoformat(e["end_time"]))
               for e in data["entries"]]
+    # records validates entries too, but payroll does not pay for one it has not checked itself
+    for start, end in shifts:
+        if not start < end <= start + MAX_SHIFT:
+            raise HTTPException(422, f"invalid time entry {start} to {end}")
     result = total_pay(shifts, data["hourly_rate"])
 
     resp = requests.put(f"{RECORDS}/payslips/{job.month}", json={"content": make_csv(data, shifts, result)},

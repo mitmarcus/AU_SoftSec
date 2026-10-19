@@ -189,7 +189,11 @@ def clock_out(job_id: int, body: Clock, c=Depends(cleaner)):
         entry = conn.execute("SELECT * FROM entries WHERE job_id = ? AND end_time IS NULL", (job_id,)).fetchone()
         if not entry:
             raise HTTPException(409, "not clocked in")
-        # VULN CWE-20: end time is stored without checking it is after the start or within MAX_SHIFT
+        start = datetime.fromisoformat(entry["start_time"])
+        if end <= start:
+            raise HTTPException(400, "clock-out must be after clock-in")
+        if end - start > MAX_SHIFT:
+            raise HTTPException(400, "shift longer than 12 hours")
         conn.execute("UPDATE entries SET end_time = ? WHERE id = ?", (end.isoformat(), entry["id"]))
     return {"entry_id": entry["id"], "start": entry["start_time"], "end": end.isoformat()}
 
