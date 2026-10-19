@@ -1,11 +1,17 @@
+x-health: &health
+  test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+  interval: 2s
+  retries: 15
+
 services:
   api:
     build: ./api
     ports:
-      - "8000:8000"
+      - "${API_PORT:-8000}:8000"
     environment:
       API_JWT_KEY: ${API_JWT_KEY:-dev-only-api-key-change-me-0123456789}
       RECORDS_JWT_KEY: ${RECORDS_JWT_KEY:-dev-only-records-key-change-me-012345}
+    healthcheck: *health
     networks: [public, internal]
 
   records:
@@ -14,12 +20,14 @@ services:
       RECORDS_JWT_KEY: ${RECORDS_JWT_KEY:-dev-only-records-key-change-me-012345}
     volumes:
       - records-data:/data
+    healthcheck: *health
     networks: [internal]
 
   payroll:
     build:
       context: .
       dockerfile: payroll/Dockerfile
+    healthcheck: *health
     networks: [internal]
 
   tests:
@@ -28,8 +36,6 @@ services:
     environment:
       API_JWT_KEY: ${API_JWT_KEY:-dev-only-api-key-change-me-0123456789}
       RECORDS_JWT_KEY: ${RECORDS_JWT_KEY:-dev-only-records-key-change-me-012345}
-    volumes:
-      - ./tests:/tests:ro
     networks: [internal]
 
 networks:
