@@ -140,8 +140,8 @@ def search_jobs(customer: str, c=Depends(user)):
         if c["role"] == "manager":
             rows = conn.execute("SELECT * FROM jobs WHERE customer LIKE ?", (f"%{customer}%",)).fetchall()
         else:
-            rows = conn.execute("SELECT * FROM jobs WHERE cleaner = ? AND customer LIKE ?",
-                                (c["sub"], f"%{customer}%")).fetchall()
+            query = f"SELECT * FROM jobs WHERE cleaner = '{c['sub']}' AND customer LIKE '%{customer}%'"  # VULN CWE-89
+            rows = conn.execute(query).fetchall()
     return [dict(r) for r in rows]
 
 
