@@ -14,6 +14,7 @@ app = FastAPI()
 
 class Job(BaseModel):
     month: str
+    cleaner_id: str
 
 
 def make_csv(data, shifts, result):
@@ -35,7 +36,7 @@ def make_csv(data, shifts, result):
 @app.post("/jobs")
 def run_job(job: Job, authorization: str = Header(default="")):
     # payroll has no key of its own; it passes on the job token from api and records decides
-    headers = {"Authorization": authorization}
+    headers = {"Authorization": authorization, "X-Cleaner-Id": job.cleaner_id}  # VULN CWE-862: forwards api's cleaner_id
 
     resp = requests.get(f"{RECORDS}/entries", params={"month": job.month}, headers=headers, timeout=5)
     if resp.status_code != 200:
@@ -50,7 +51,7 @@ def run_job(job: Job, authorization: str = Header(default="")):
                         headers=headers, timeout=5)
     if resp.status_code != 200:
         raise HTTPException(resp.status_code, resp.json().get("detail"))
-    return {**resp.json(), **result}
+    return {**resp.json(), **result, "hourly_rate": data["hourly_rate"]}
 
 
 @app.get("/health")
