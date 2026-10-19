@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="2" skipped="0" tests="25" time="6.470" timestamp="2026-10-19T12:56:18.391562+00:00" hostname="b49aee576239"><testcase classname="exploits.test_cwe20_input_validation" name="test_iza_inflates_her_pay" time="0.498" /><testcase classname="exploits.test_cwe22_path_traversal" name="test_iza_downloads_marius_payslip" time="0.813" /><testcase classname="exploits.test_cwe862_confused_deputy" name="test_iza_generates_marius_payslip" time="0.399" /><testcase classname="exploits.test_cwe89_sql_injection" name="test_iza_sees_all_jobs_through_search" time="0.377" /><testcase classname="test_authz" name="test_no_token_is_rejected" time="0.007" /><testcase classname="test_authz" name="test_cleaner_cannot_see_other_cleaners_jobs" time="0.373" /><testcase classname="test_authz" name="test_cleaner_cannot_clock_in_on_other_cleaners_job" time="0.377" /><testcase classname="test_authz" name="test_cleaner_cannot_download_other_cleaners_payslip" time="0.726" /><testcase classname="test_authz" name="test_cleaner_cannot_call_manager_endpoints" time="0.296" /><testcase classname="test_authz" name="test_records_rejects_expired_job_token" time="0.006" /><testcase classname="test_authz" name="test_records_rejects_wrong_audience" time="0.005" /><testcase classname="test_authz" name="test_records_rejects_token_signed_with_api_key" time="0.005" /><testcase classname="test_authz" name="test_records_rejects_missing_scope" time="0.011" /><testcase classname="test_authz" name="test_job_token_cannot_use_user_endpoints" time="0.007" /><testcase classname="test_authz" name="test_payroll_cannot_write_other_month" time="0.008" /><testcase classname="test_authz" name="test_payroll_cannot_act_for_other_cleaner" time="0.010"><failure message="AssertionError: assert 'marius' == 'iza'&#10;  &#10;  - iza&#10;  + marius">def test_payroll_cannot_act_for_other_cleaner():
+        # the cleaner comes from the token; a header naming someone else changes nothing
+        headers = {**job_token(sub="iza"), "X-Cleaner-Id": "marius"}
+        entries = requests.get(f"{RECORDS}/entries", params={"month": "2026-09"}, headers=headers, timeout=5).json()
+&gt;       assert entries["cleaner"] == "iza"
+E       AssertionError: assert 'marius' == 'iza'
+E         
+E         - iza
+E         + marius
+
+test_authz.py:79: AssertionError</failure></testcase><testcase classname="test_authz" name="test_api_ignores_cleaner_in_payslip_request" time="0.296"><failure message="AssertionError: assert 'marius-2026-09.csv' == 'iza-2026-09.csv'&#10;  &#10;  - iza-2026-09.csv&#10;  ?  ^^&#10;  + marius-2026-09.csv&#10;  ? +++ ^^">iza = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJpemEiLCJyb2xlIjoiY2xlYW5lciIsImF1ZCI6ImFwaSIsImV4cCI6MTc5MjQxNjM4Mn0.vu7IBcW7Kyfgc_krCDwauIUQK7_-IbAKcfBL5InZ64g'}
+
+    def test_api_ignores_cleaner_in_payslip_request(iza):
+        resp = requests.post(f"{API}/payslips", json={"month": "2026-09", "cleaner_id": "marius"}, headers=iza, timeout=30)
+&gt;       assert resp.json()["file"] == "iza-2026-09.csv"
+E       AssertionError: assert 'marius-2026-09.csv' == 'iza-2026-09.csv'
+E         
+E         - iza-2026-09.csv
+E         ?  ^^
+E         + marius-2026-09.csv
+E         ? +++ ^^
+
+test_authz.py:86: AssertionError</failure></testcase><testcase classname="test_functional" name="test_login_wrong_password" time="0.224" /><testcase classname="test_functional" name="test_cleaner_lists_own_jobs" time="0.222" /><testcase classname="test_functional" name="test_search_jobs" time="0.222" /><testcase classname="test_functional" name="test_manager_assigns_job" time="0.465" /><testcase classname="test_functional" name="test_clock_in_and_out" time="0.490" /><testcase classname="test_functional" name="test_generate_and_download_payslip" time="0.257" /><testcase classname="test_functional" name="test_manager_overview" time="0.243" /><testcase classname="test_health" name="test_api_health" time="0.006" /></testsuite></testsuites>

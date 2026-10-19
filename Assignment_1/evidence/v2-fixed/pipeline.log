@@ -1,0 +1,409 @@
+Started by user unknown or anonymous
+Checking out git https://github.com/mitmarcus/AU_SoftSec.git into /var/jenkins_home/workspace/v2-fixed@script/6adf2365360d539725fb15c863834a9cc7a9dde88efbd93a5bb41bb74e3a0720 to read Assignment_1/Jenkinsfile
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning repository https://github.com/mitmarcus/AU_SoftSec.git
+ > git init /var/jenkins_home/workspace/v2-fixed@script/6adf2365360d539725fb15c863834a9cc7a9dde88efbd93a5bb41bb74e3a0720 # timeout=10
+Fetching upstream changes from https://github.com/mitmarcus/AU_SoftSec.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git fetch --tags --force --progress -- https://github.com/mitmarcus/AU_SoftSec.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/mitmarcus/AU_SoftSec.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/refs/tags/v2-fixed^{commit} # timeout=10
+ > git rev-parse refs/tags/v2-fixed^{commit} # timeout=10
+Checking out Revision e02be943edf533a2deefcffd00cd7d82d4558462 (refs/tags/v2-fixed)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f e02be943edf533a2deefcffd00cd7d82d4558462 # timeout=10
+Commit message: "fix: take payslip cleaner from token only (CWE-862)"
+First time build. Skipping changelog.
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/v2-fixed
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+The recommended git tool is: NONE
+No credentials specified
+Cloning the remote Git repository
+Cloning repository https://github.com/mitmarcus/AU_SoftSec.git
+ > git init /var/jenkins_home/workspace/v2-fixed # timeout=10
+Fetching upstream changes from https://github.com/mitmarcus/AU_SoftSec.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git fetch --tags --force --progress -- https://github.com/mitmarcus/AU_SoftSec.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/mitmarcus/AU_SoftSec.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+ > git rev-parse refs/remotes/origin/refs/tags/v2-fixed^{commit} # timeout=10
+ > git rev-parse refs/tags/v2-fixed^{commit} # timeout=10
+Checking out Revision e02be943edf533a2deefcffd00cd7d82d4558462 (refs/tags/v2-fixed)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f e02be943edf533a2deefcffd00cd7d82d4558462 # timeout=10
+Commit message: "fix: take payslip cleaner from token only (CWE-862)"
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] timeout
+Timeout set to expire in 30 min
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Setup)
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/v2-fixed/Assignment_1
+[Pipeline] {
+[Pipeline] sh
++ python3 -m venv .venv
++ .venv/bin/pip install -q ruff==0.17.1 bandit==1.9.4 pip-audit==2.10.1 pytest==9.1.1
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Lint)
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/v2-fixed/Assignment_1
+[Pipeline] {
+[Pipeline] sh
++ .venv/bin/ruff check .
+All checks passed!
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Static analysis)
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/v2-fixed/Assignment_1
+[Pipeline] {
+[Pipeline] sh
++ .venv/bin/bandit -r api records payroll payrates seed client.py -f json -o bandit.json --exit-zero
+[main]	INFO	profile include tests: None
+[main]	INFO	profile exclude tests: None
+[main]	INFO	cli include tests: None
+[main]	INFO	cli exclude tests: None
+[json]	INFO	JSON output written to file: bandit.json
++ .venv/bin/bandit -r api records payroll payrates seed client.py -q --severity-level high
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Dependency analysis)
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/v2-fixed/Assignment_1
+[Pipeline] {
+[Pipeline] sh
++ .venv/bin/pip-audit -r api/requirements.txt -r records/requirements.txt -r payroll/requirements.txt -r tests/requirements.txt -f json -o pip-audit.json
+No known vulnerabilities found
++ .venv/bin/python -
+fixable vulnerabilities: []
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Wheel hash check)
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/v2-fixed/Assignment_1
+[Pipeline] {
+[Pipeline] sh
++ awk {print substr($4, 15) "  " substr($3, 9)} payroll/payrates.txt
++ sha256sum -c -
+wheels/payrates-0.1.0-py3-none-any.whl: OK
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build)
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/v2-fixed/Assignment_1
+[Pipeline] {
+[Pipeline] sh
++ docker compose --profile test build
+#0 building with "default" instance using docker driver
+
+#1 [payroll internal] load build definition from Dockerfile
+#1 transferring dockerfile: 472B done
+#1 DONE 0.0s
+
+#2 [api internal] load build definition from Dockerfile
+#2 transferring dockerfile: 268B done
+#2 DONE 0.0s
+
+#3 [records internal] load build definition from Dockerfile
+#3 transferring dockerfile: 302B done
+#3 DONE 0.0s
+
+#4 [tests internal] load build definition from Dockerfile
+#4 transferring dockerfile: 250B done
+#4 DONE 0.1s
+
+#5 [tests internal] load metadata for docker.io/library/python:3.14.8-slim
+#5 DONE 0.0s
+
+#6 [payroll internal] load .dockerignore
+#6 transferring context: 2B done
+#6 DONE 0.1s
+
+#7 [api internal] load .dockerignore
+#7 transferring context: 2B done
+#7 DONE 0.0s
+
+#8 [payroll internal] load build context
+#8 DONE 0.0s
+
+#9 [payroll 1/8] FROM docker.io/library/python:3.14.8-slim
+#9 DONE 0.0s
+
+#10 [tests internal] load .dockerignore
+#10 transferring context: 52B done
+#10 DONE 0.1s
+
+#9 [tests 1/8] FROM docker.io/library/python:3.14.8-slim
+#9 DONE 0.0s
+
+#11 [records internal] load .dockerignore
+#11 transferring context: 2B done
+#11 DONE 0.1s
+
+#8 [payroll internal] load build context
+#8 transferring context: 4.31kB done
+#8 DONE 0.0s
+
+#12 [api internal] load build context
+#12 transferring context: 5.05kB done
+#12 DONE 0.0s
+
+#13 [records internal] load build context
+#13 transferring context: 8.87kB done
+#13 DONE 0.1s
+
+#14 [tests internal] load build context
+#14 transferring context: 10.41kB done
+#14 DONE 0.0s
+
+#15 [api 4/6] RUN pip install --no-cache-dir -r requirements.txt
+#15 CACHED
+
+#16 [api 5/6] COPY app.py .
+#16 CACHED
+
+#17 [api 2/8] WORKDIR /app
+#17 CACHED
+
+#18 [api 3/6] COPY requirements.txt .
+#18 CACHED
+
+#19 [api 6/6] RUN useradd --system app
+#19 CACHED
+
+#20 [payroll 4/8] RUN pip install --no-cache-dir -r requirements.txt
+#20 CACHED
+
+#21 [payroll 5/8] COPY wheels/ /wheels/
+#21 CACHED
+
+#22 [payroll 7/8] COPY payroll/app.py .
+#22 CACHED
+
+#23 [payroll 6/8] RUN pip install --no-cache-dir --no-deps --require-hashes -r payrates.txt
+#23 CACHED
+
+#24 [payroll 3/8] COPY payroll/requirements.txt payroll/payrates.txt ./
+#24 CACHED
+
+#25 [payroll 8/8] RUN useradd --system app
+#25 CACHED
+
+#26 [tests 3/6] COPY requirements.txt .
+#26 CACHED
+
+#27 [tests 5/6] COPY . .
+#27 CACHED
+
+#28 [tests 4/6] RUN pip install --no-cache-dir -r requirements.txt
+#28 CACHED
+
+#29 [tests 2/6] WORKDIR /tests
+#29 CACHED
+
+#30 [tests 6/6] RUN useradd --system app
+#30 CACHED
+
+#31 [records 4/6] RUN pip install --no-cache-dir -r requirements.txt
+#31 CACHED
+
+#32 [records 3/6] COPY requirements.txt .
+#32 CACHED
+
+#17 [records 2/8] WORKDIR /app
+#17 CACHED
+
+#33 [records 5/6] COPY app.py .
+#33 CACHED
+
+#34 [records 6/6] RUN useradd --system app && mkdir /data && chown app /data
+#34 CACHED
+
+#35 [api] exporting to image
+#35 exporting layers done
+#35 writing image sha256:f33eaa2bdaab78982dc787e7dc4880d335a8ece2bcfd013ab7dc89783596e470 done
+#35 naming to docker.io/library/cleaning-ci-api 0.0s done
+#35 DONE 0.1s
+
+#36 [payroll] exporting to image
+#36 exporting layers done
+#36 writing image sha256:15aeeb5abfbb3e947fefc8a368f517561a84f821452693ad4cdfa2e31794a682 done
+#36 naming to docker.io/library/cleaning-ci-payroll 0.0s done
+#36 DONE 0.1s
+
+#37 [tests] exporting to image
+#37 exporting layers done
+#37 writing image sha256:2c49b010b0dfe55c3ebc584008b73a565ba4f725d7d7a57bbb09ad33c18b8da6 done
+#37 naming to docker.io/library/cleaning-ci-tests 0.0s done
+#37 DONE 0.1s
+
+#38 [records] exporting to image
+#38 exporting layers done
+#38 writing image sha256:697b2a88d772009083c5310380161567f8b93ca48f0dddb006df258a4ac5266c done
+#38 naming to docker.io/library/cleaning-ci-records done
+#38 DONE 0.1s
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Start and seed)
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/v2-fixed/Assignment_1
+[Pipeline] {
+[Pipeline] sh
++ docker compose down -v --remove-orphans
+ Volume cleaning-ci_records-data  Removing
+ Volume cleaning-ci_records-data  Removed
++ docker compose up -d --wait
+ Network cleaning-ci_internal  Creating
+ Network cleaning-ci_internal  Created
+ Network cleaning-ci_public  Creating
+ Network cleaning-ci_public  Created
+ Volume "cleaning-ci_records-data"  Creating
+ Volume "cleaning-ci_records-data"  Created
+ Container cleaning-ci-records-1  Creating
+ Container cleaning-ci-payroll-1  Creating
+ Container cleaning-ci-api-1  Creating
+ Container cleaning-ci-api-1  Created
+ Container cleaning-ci-payroll-1  Created
+ Container cleaning-ci-records-1  Created
+ Container cleaning-ci-payroll-1  Starting
+ Container cleaning-ci-api-1  Starting
+ Container cleaning-ci-records-1  Starting
+ Container cleaning-ci-payroll-1  Started
+ Container cleaning-ci-records-1  Started
+ Container cleaning-ci-api-1  Started
+ Container cleaning-ci-payroll-1  Waiting
+ Container cleaning-ci-api-1  Waiting
+ Container cleaning-ci-records-1  Waiting
+ Container cleaning-ci-payroll-1  Healthy
+ Container cleaning-ci-records-1  Healthy
+ Container cleaning-ci-api-1  Healthy
++ docker compose exec -T records python -
+seeded 3 users, 4 jobs, 4 entries
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Test)
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/v2-fixed/Assignment_1
+[Pipeline] {
+[Pipeline] sh
++ .venv/bin/pytest payrates/tests -p no:cacheprovider --junitxml=junit-payrates.xml
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-9.1.1, pluggy-1.7.0
+rootdir: /var/jenkins_home/workspace/v2-fixed/Assignment_1/payrates
+configfile: pyproject.toml
+plugins: platformdirs-4.13.5
+collected 3 items
+
+payrates/tests/test_payrates.py ...                                      [100%]
+
+- generated xml file: /var/jenkins_home/workspace/v2-fixed/Assignment_1/junit-payrates.xml -
+============================== 3 passed in 0.03s ===============================
++ docker rm -f cleaning-ci-tests
+Error response from daemon: No such container: cleaning-ci-tests
++ docker compose run --name cleaning-ci-tests tests pytest -p no:cacheprovider --junitxml=/tmp/junit.xml /tests
+============================= test session starts ==============================
+platform linux -- Python 3.14.8, pytest-9.1.1, pluggy-1.7.0
+rootdir: /tests
+collected 25 items
+
+exploits/test_cwe20_input_validation.py .                                [  4%]
+exploits/test_cwe22_path_traversal.py .                                  [  8%]
+exploits/test_cwe862_confused_deputy.py .                                [ 12%]
+exploits/test_cwe89_sql_injection.py .                                   [ 16%]
+test_authz.py .............                                              [ 68%]
+test_functional.py .......                                               [ 96%]
+test_health.py .                                                         [100%]
+
+---------------------- generated xml file: /tmp/junit.xml ----------------------
+============================== 25 passed in 6.75s ==============================
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/v2-fixed/Assignment_1
+[Pipeline] {
+[Pipeline] sh
++ docker cp cleaning-ci-tests:/tmp/junit.xml junit.xml
++ docker rm -f cleaning-ci-tests
+cleaning-ci-tests
++ docker compose --profile test down -v --remove-orphans
+ Container cleaning-ci-payroll-1  Stopping
+ Container cleaning-ci-api-1  Stopping
+ Container cleaning-ci-records-1  Stopping
+ Container cleaning-ci-payroll-1  Stopped
+ Container cleaning-ci-payroll-1  Removing
+ Container cleaning-ci-payroll-1  Removed
+ Container cleaning-ci-records-1  Stopped
+ Container cleaning-ci-records-1  Removing
+ Container cleaning-ci-records-1  Removed
+ Container cleaning-ci-api-1  Stopped
+ Container cleaning-ci-api-1  Removing
+ Container cleaning-ci-api-1  Removed
+ Volume cleaning-ci_records-data  Removing
+ Network cleaning-ci_internal  Removing
+ Network cleaning-ci_public  Removing
+ Volume cleaning-ci_records-data  Removed
+ Network cleaning-ci_public  Removed
+ Network cleaning-ci_internal  Removed
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] junit
+Recording test results
+[Checks API] No suitable checks publisher found.
+[Pipeline] archiveArtifacts
+Archiving artifacts
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
