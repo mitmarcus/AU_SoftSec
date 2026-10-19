@@ -1,0 +1,128 @@
+// Multibranch pipeline: Jenkins builds every branch and pull request it discovers (see README).
+pipeline {
+    agent any
+
+    options {
+        disableConcurrentBuilds()
+        timeout(time: 30, unit: 'MINUTES')
+    }
+
+    triggers {
+        pollSCM('H/2 * * * *')
+    }
+
+    environment {
+        COMPOSE_PROJECT_NAME = 'cleaning-ci'
+        API_PORT = '18000'
+        SRC = 'api records payroll payrates seed client.py'
+    }
+
+    stages {
+        stage('Setup') {
+            steps {
+                dir('Assignment_1') {
+                    sh '''
+                        python3 -m venv .venv
+                        .venv/bin/pip install -q ruff==0.17.1 bandit==1.9.4 pip-audit==2.10.1 pytest==9.1.1
+                    '''
+                }
+            }
+        }
+
+        stage('Lint') {
+            steps {
+                dir('Assignment_1') {
+                    sh '.venv/bin/ruff check .'
+                }
+            }
+        }
+
+        stage('Static analysis') {
+            steps {
+                dir('Assignment_1') {
+                    sh '''
+                        .venv/bin/bandit -r $SRC -f json -o bandit.json --exit-zero
+                        # gate: any HIGH severity finding fails the build
+                        .venv/bin/bandit -r $SRC -q --severity-level high
+                    '''
+                }
+            }
+        }
+
+        stage('Dependency analysis') {
+            steps {
+                dir('Assignment_1') {
+                    sh '''
+                        .venv/bin/pip-audit -r api/requirements.txt -r records/requirements.txt \
+                            -r payroll/requirements.txt -r tests/requirements.txt -f json -o pip-audit.json || true
+                        # gate: any vulnerability that has a fixed version fails the build
+                        .venv/bin/python - <<'EOF'
+import json, sys
+deps = json.load(open("pip-audit.json"))["dependencies"]
+fixable = [(d["name"], v["id"]) for d in deps for v in d.get("vulns", []) if v["fix_versions"]]
+print("fixable vulnerabilities:", fixable)
+sys.exit(1 if fixable else 0)
+EOF
+                    '''
+                }
+            }
+        }
+
+        stage('Wheel hash check') {
+            steps {
+                dir('Assignment_1') {
+                    // payroll/payrates.txt: payrates @ file:///wheels/<name> --hash=sha256:<hash>
+                    sh "awk '{print substr(\$4, 15) \"  \" substr(\$3, 9)}' payroll/payrates.txt | sha256sum -c -"
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('Assignment_1') {
+                    sh 'docker compose --profile test build'
+                }
+            }
+        }
+
+        stage('Start and seed') {
+            steps {
+                dir('Assignment_1') {
+                    sh '''
+                        docker compose down -v --remove-orphans
+                        docker compose up -d --wait
+                        docker compose exec -T records python - < seed/seed.py
+                    '''
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                dir('Assignment_1') {
+                    sh '''
+                        .venv/bin/pytest payrates/tests -p no:cacheprovider --junitxml=junit-payrates.xml
+                        docker rm -f cleaning-ci-tests || true
+                        docker compose run --name cleaning-ci-tests tests \
+                            pytest -p no:cacheprovider --junitxml=/tmp/junit.xml /tests
+                    '''
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            dir('Assignment_1') {
+                sh '''
+                    docker cp cleaning-ci-tests:/tmp/junit.xml junit.xml || true
+                    docker rm -f cleaning-ci-tests || true
+                    docker compose --profile test down -v --remove-orphans || true
+                '''
+            }
+            junit allowEmptyResults: true, testResults: 'Assignment_1/junit*.xml'
+            archiveArtifacts allowEmptyArchive: true,
+                artifacts: 'Assignment_1/bandit.json, Assignment_1/pip-audit.json, Assignment_1/junit*.xml'
+        }
+    }
+}
