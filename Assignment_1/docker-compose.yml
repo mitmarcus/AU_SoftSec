@@ -3,10 +3,15 @@ services:
     build: ./api
     ports:
       - "8000:8000"
+    environment:
+      API_JWT_KEY: ${API_JWT_KEY:-dev-only-api-key-change-me-0123456789}
+      RECORDS_JWT_KEY: ${RECORDS_JWT_KEY:-dev-only-records-key-change-me-012345}
     networks: [public, internal]
 
   records:
     build: ./records
+    environment:
+      RECORDS_JWT_KEY: ${RECORDS_JWT_KEY:-dev-only-records-key-change-me-012345}
     volumes:
       - records-data:/data
     networks: [internal]
@@ -20,7 +25,7 @@ services:
 networks:
   public:
   internal:
-    internal: true  # no route out of the docker network
+    internal: true # no route out of the docker network
 
 volumes:
   records-data:
