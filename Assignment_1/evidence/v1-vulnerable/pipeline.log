@@ -1,10 +1,10 @@
 Started by user unknown or anonymous
-Checking out git https://github.com/mitmarcus/AU_SoftSec.git into /var/jenkins_home/workspace/v1-vulnerable@script/6adf2365360d539725fb15c863834a9cc7a9dde88efbd93a5bb41bb74e3a0720 to read Assignment_1/Jenkinsfile
+Checking out git https://github.com/mitmarcus/AU_SoftSec.git into /var/jenkins_home/workspace/v1-vulnerable@script/9de4ced0c89882c9ea47423543224a60f66e01ca1727c66c1dbc30bc22b9445d to read Assignment_1/Jenkinsfile
 The recommended git tool is: NONE
 No credentials specified
 Cloning the remote Git repository
 Cloning repository https://github.com/mitmarcus/AU_SoftSec.git
- > git init /var/jenkins_home/workspace/v1-vulnerable@script/6adf2365360d539725fb15c863834a9cc7a9dde88efbd93a5bb41bb74e3a0720 # timeout=10
+ > git init /var/jenkins_home/workspace/v1-vulnerable@script/9de4ced0c89882c9ea47423543224a60f66e01ca1727c66c1dbc30bc22b9445d # timeout=10
 Fetching upstream changes from https://github.com/mitmarcus/AU_SoftSec.git
  > git --version # timeout=10
  > git --version # 'git version 2.47.3'
@@ -14,9 +14,9 @@ Fetching upstream changes from https://github.com/mitmarcus/AU_SoftSec.git
 Avoid second fetch
  > git rev-parse refs/remotes/origin/refs/tags/v1-vulnerable^{commit} # timeout=10
  > git rev-parse refs/tags/v1-vulnerable^{commit} # timeout=10
-Checking out Revision dc26c14ea6bd296f69b19283f93b87a5ac828a7f (refs/tags/v1-vulnerable)
+Checking out Revision 305067ffdb131967eb62436517fa0c4c8eecd055 (refs/tags/v1-vulnerable)
  > git config core.sparsecheckout # timeout=10
- > git checkout -f dc26c14ea6bd296f69b19283f93b87a5ac828a7f # timeout=10
+ > git checkout -f 305067ffdb131967eb62436517fa0c4c8eecd055 # timeout=10
 Commit message: "ci: add Jenkins pipeline with lint, bandit, pip-audit, hash check and tests"
 First time build. Skipping changelog.
 [Pipeline] Start of Pipeline
@@ -40,9 +40,9 @@ Fetching upstream changes from https://github.com/mitmarcus/AU_SoftSec.git
 Avoid second fetch
  > git rev-parse refs/remotes/origin/refs/tags/v1-vulnerable^{commit} # timeout=10
  > git rev-parse refs/tags/v1-vulnerable^{commit} # timeout=10
-Checking out Revision dc26c14ea6bd296f69b19283f93b87a5ac828a7f (refs/tags/v1-vulnerable)
+Checking out Revision 305067ffdb131967eb62436517fa0c4c8eecd055 (refs/tags/v1-vulnerable)
  > git config core.sparsecheckout # timeout=10
- > git checkout -f dc26c14ea6bd296f69b19283f93b87a5ac828a7f # timeout=10
+ > git checkout -f 305067ffdb131967eb62436517fa0c4c8eecd055 # timeout=10
 Commit message: "ci: add Jenkins pipeline with lint, bandit, pip-audit, hash check and tests"
 [Pipeline] }
 [Pipeline] // stage
@@ -134,12 +134,12 @@ Running in /var/jenkins_home/workspace/v1-vulnerable/Assignment_1
 #1 transferring dockerfile: 268B done
 #1 DONE 0.1s
 
-#2 [records internal] load build definition from Dockerfile
-#2 transferring dockerfile: 302B done
-#2 DONE 0.1s
+#2 [api internal] load metadata for docker.io/library/python:3.14.8-slim
+#2 DONE 0.0s
 
-#3 [records internal] load metadata for docker.io/library/python:3.14.8-slim
-#3 DONE 0.0s
+#3 [records internal] load build definition from Dockerfile
+#3 transferring dockerfile: 302B done
+#3 DONE 0.1s
 
 #4 [payroll internal] load build definition from Dockerfile
 #4 transferring dockerfile: 472B done
@@ -153,19 +153,19 @@ Running in /var/jenkins_home/workspace/v1-vulnerable/Assignment_1
 #6 transferring context: 2B done
 #6 DONE 0.1s
 
-#7 [tests internal] load .dockerignore
-#7 transferring context: 52B done
+#7 [payroll internal] load .dockerignore
+#7 transferring context: 2B done
 #7 DONE 0.1s
 
-#8 [payroll 1/6] FROM docker.io/library/python:3.14.8-slim
+#8 [tests 1/6] FROM docker.io/library/python:3.14.8-slim
 #8 DONE 0.0s
 
 #9 [records internal] load .dockerignore
 #9 transferring context: 2B done
 #9 DONE 0.1s
 
-#10 [payroll internal] load .dockerignore
-#10 transferring context: 2B done
+#10 [tests internal] load .dockerignore
+#10 transferring context: 52B done
 #10 DONE 0.1s
 
 #11 [records internal] load build context
@@ -176,78 +176,78 @@ Running in /var/jenkins_home/workspace/v1-vulnerable/Assignment_1
 #12 transferring context: 5.23kB done
 #12 DONE 0.1s
 
-#13 [tests internal] load build context
-#13 transferring context: 10.31kB done
+#13 [payroll internal] load build context
+#13 transferring context: 4.11kB done
 #13 DONE 0.1s
 
-#14 [payroll internal] load build context
-#14 transferring context: 4.11kB done
+#14 [tests internal] load build context
+#14 transferring context: 10.31kB done
 #14 DONE 0.1s
 
-#15 [api 3/6] COPY requirements.txt .
+#15 [api 5/6] COPY app.py .
 #15 CACHED
 
-#16 [api 5/6] COPY app.py .
+#16 [api 4/6] RUN pip install --no-cache-dir -r requirements.txt
 #16 CACHED
 
-#17 [api 2/6] WORKDIR /app
+#17 [api 3/6] COPY requirements.txt .
 #17 CACHED
 
-#18 [api 4/6] RUN pip install --no-cache-dir -r requirements.txt
+#18 [api 6/6] RUN useradd --system app
 #18 CACHED
 
-#19 [api 6/6] RUN useradd --system app
+#19 [records 5/6] COPY app.py .
 #19 CACHED
 
-#20 [api] exporting to image
-#20 exporting layers done
-#20 writing image sha256:9a75c98d826d7146df1c93ae4c8ed8cae8f763958333ee24606627c986286f1f done
-#20 naming to docker.io/library/cleaning-ci-api done
-#20 DONE 0.0s
+#20 [records 3/6] COPY requirements.txt .
+#20 CACHED
 
 #21 [records 4/6] RUN pip install --no-cache-dir -r requirements.txt
 #21 CACHED
 
-#22 [records 3/6] COPY requirements.txt .
+#22 [records 2/6] WORKDIR /app
 #22 CACHED
 
-#23 [records 5/6] COPY app.py .
+#23 [records 6/6] RUN useradd --system app && mkdir /data && chown app /data
 #23 CACHED
 
-#24 [records 6/6] RUN useradd --system app && mkdir /data && chown app /data
+#24 [tests 5/6] COPY . .
 #24 CACHED
 
-#25 [tests 2/6] WORKDIR /tests
+#25 [tests 3/6] COPY requirements.txt .
 #25 CACHED
 
 #26 [tests 4/6] RUN pip install --no-cache-dir -r requirements.txt
 #26 CACHED
 
-#27 [tests 3/6] COPY requirements.txt .
+#27 [tests 2/6] WORKDIR /tests
 #27 CACHED
 
-#28 [tests 5/6] COPY . .
+#28 [tests 6/6] RUN useradd --system app
 #28 CACHED
 
-#29 [tests 6/6] RUN useradd --system app
-#29 CACHED
+#29 [api] exporting to image
+#29 exporting layers done
+#29 writing image sha256:9a75c98d826d7146df1c93ae4c8ed8cae8f763958333ee24606627c986286f1f done
+#29 naming to docker.io/library/cleaning-ci-api done
+#29 DONE 0.0s
 
-#30 [payroll 5/8] COPY wheels/ /wheels/
+#30 [payroll 6/8] RUN pip install --no-cache-dir --no-deps --require-hashes -r payrates.txt
 #30 CACHED
 
-#31 [payroll 7/8] COPY payroll/app.py .
+#22 [payroll 2/6] WORKDIR /app
+#22 CACHED
+
+#31 [payroll 4/8] RUN pip install --no-cache-dir -r requirements.txt
 #31 CACHED
 
-#32 [payroll 6/8] RUN pip install --no-cache-dir --no-deps --require-hashes -r payrates.txt
+#32 [payroll 5/8] COPY wheels/ /wheels/
 #32 CACHED
-
-#17 [payroll 2/6] WORKDIR /app
-#17 CACHED
 
 #33 [payroll 3/8] COPY payroll/requirements.txt payroll/payrates.txt ./
 #33 CACHED
 
-#34 [payroll 4/8] RUN pip install --no-cache-dir -r requirements.txt
+#34 [payroll 7/8] COPY payroll/app.py .
 #34 CACHED
 
 #35 [payroll 8/8] RUN useradd --system app
@@ -259,16 +259,16 @@ Running in /var/jenkins_home/workspace/v1-vulnerable/Assignment_1
 #36 naming to docker.io/library/cleaning-ci-records done
 #36 DONE 0.0s
 
-#37 [tests] exporting to image
+#37 [payroll] exporting to image
 #37 exporting layers done
-#37 writing image sha256:51dda53f3add810c63a55de61f48b6f7f83fa153010fadf5053b543e722d8e80 done
-#37 naming to docker.io/library/cleaning-ci-tests done
+#37 writing image sha256:3d2e326f4d1dd601bcf46b93d1b68443d8f66ecd2d5abe5ffd5286ed7c55f5aa done
+#37 naming to docker.io/library/cleaning-ci-payroll 0.0s done
 #37 DONE 0.1s
 
-#38 [payroll] exporting to image
+#38 [tests] exporting to image
 #38 exporting layers done
-#38 writing image sha256:3d2e326f4d1dd601bcf46b93d1b68443d8f66ecd2d5abe5ffd5286ed7c55f5aa done
-#38 naming to docker.io/library/cleaning-ci-payroll done
+#38 writing image sha256:51dda53f3add810c63a55de61f48b6f7f83fa153010fadf5053b543e722d8e80 done
+#38 naming to docker.io/library/cleaning-ci-tests done
 #38 DONE 0.1s
 [Pipeline] }
 [Pipeline] // dir
@@ -284,20 +284,20 @@ Running in /var/jenkins_home/workspace/v1-vulnerable/Assignment_1
  Volume cleaning-ci_records-data  Removing
  Volume cleaning-ci_records-data  Removed
 + docker compose up -d --wait
- Network cleaning-ci_internal  Creating
- Network cleaning-ci_internal  Created
  Network cleaning-ci_public  Creating
  Network cleaning-ci_public  Created
+ Network cleaning-ci_internal  Creating
+ Network cleaning-ci_internal  Created
  Volume "cleaning-ci_records-data"  Creating
  Volume "cleaning-ci_records-data"  Created
- Container cleaning-ci-records-1  Creating
  Container cleaning-ci-api-1  Creating
+ Container cleaning-ci-records-1  Creating
  Container cleaning-ci-payroll-1  Creating
  Container cleaning-ci-payroll-1  Created
- Container cleaning-ci-api-1  Created
  Container cleaning-ci-records-1  Created
- Container cleaning-ci-payroll-1  Starting
+ Container cleaning-ci-api-1  Created
  Container cleaning-ci-records-1  Starting
+ Container cleaning-ci-payroll-1  Starting
  Container cleaning-ci-api-1  Starting
  Container cleaning-ci-records-1  Started
  Container cleaning-ci-payroll-1  Started
@@ -305,9 +305,9 @@ Running in /var/jenkins_home/workspace/v1-vulnerable/Assignment_1
  Container cleaning-ci-records-1  Waiting
  Container cleaning-ci-payroll-1  Waiting
  Container cleaning-ci-api-1  Waiting
- Container cleaning-ci-payroll-1  Healthy
- Container cleaning-ci-api-1  Healthy
  Container cleaning-ci-records-1  Healthy
+ Container cleaning-ci-api-1  Healthy
+ Container cleaning-ci-payroll-1  Healthy
 + docker compose exec -T records python -
 seeded 3 users, 4 jobs, 4 entries
 [Pipeline] }
@@ -331,7 +331,7 @@ collected 3 items
 payrates/tests/test_payrates.py ...                                      [100%]
 
 - generated xml file: /var/jenkins_home/workspace/v1-vulnerable/Assignment_1/junit-payrates.xml -
-============================== 3 passed in 0.03s ===============================
+============================== 3 passed in 0.04s ===============================
 + docker rm -f cleaning-ci-tests
 Error response from daemon: No such container: cleaning-ci-tests
 + docker compose run --name cleaning-ci-tests tests pytest -p no:cacheprovider --junitxml=/tmp/junit.xml /tests
@@ -364,7 +364,7 @@ E         + marius
 test_authz.py:79: AssertionError
 _________________ test_api_ignores_cleaner_in_payslip_request __________________
 
-iza = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJpemEiLCJyb2xlIjoiY2xlYW5lciIsImF1ZCI6ImFwaSIsImV4cCI6MTc5MjQxNjM4Mn0.vu7IBcW7Kyfgc_krCDwauIUQK7_-IbAKcfBL5InZ64g'}
+iza = {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJpemEiLCJyb2xlIjoiY2xlYW5lciIsImF1ZCI6ImFwaSIsImV4cCI6MTc5MjUwNzU2NH0.v-6LNA5Y1Fc7vULMM2tkHLcjN9NByqpF46Ie3ZMimaA'}
 
     def test_api_ignores_cleaner_in_payslip_request(iza):
         resp = requests.post(f"{API}/payslips", json={"month": "2026-09", "cleaner_id": "marius"}, headers=iza, timeout=30)
@@ -381,7 +381,7 @@ test_authz.py:86: AssertionError
 =========================== short test summary info ============================
 FAILED test_authz.py::test_payroll_cannot_act_for_other_cleaner - AssertionEr...
 FAILED test_authz.py::test_api_ignores_cleaner_in_payslip_request - Assertion...
-========================= 2 failed, 23 passed in 6.47s =========================
+========================= 2 failed, 23 passed in 4.95s =========================
 [Pipeline] }
 [Pipeline] // dir
 [Pipeline] }
@@ -397,23 +397,23 @@ Running in /var/jenkins_home/workspace/v1-vulnerable/Assignment_1
 cleaning-ci-tests
 + docker compose --profile test down -v --remove-orphans
  Container cleaning-ci-api-1  Stopping
- Container cleaning-ci-records-1  Stopping
  Container cleaning-ci-payroll-1  Stopping
+ Container cleaning-ci-records-1  Stopping
  Container cleaning-ci-records-1  Stopped
  Container cleaning-ci-records-1  Removing
+ Container cleaning-ci-records-1  Removed
  Container cleaning-ci-payroll-1  Stopped
  Container cleaning-ci-payroll-1  Removing
- Container cleaning-ci-records-1  Removed
  Container cleaning-ci-payroll-1  Removed
  Container cleaning-ci-api-1  Stopped
  Container cleaning-ci-api-1  Removing
  Container cleaning-ci-api-1  Removed
  Volume cleaning-ci_records-data  Removing
- Network cleaning-ci_public  Removing
  Network cleaning-ci_internal  Removing
+ Network cleaning-ci_public  Removing
  Volume cleaning-ci_records-data  Removed
- Network cleaning-ci_internal  Removed
  Network cleaning-ci_public  Removed
+ Network cleaning-ci_internal  Removed
 [Pipeline] }
 [Pipeline] // dir
 [Pipeline] junit
