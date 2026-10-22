@@ -1,0 +1,13 @@
+Started on Oct 22, 2026, 10:41:00 PM
+Using strategy: SpecificRevisionBuildChooser
+[poll] Last Built Revision: Revision cbe5d849af2aac267fb9542a75f95dc49bd4a449 (main)
+The recommended git tool is: NONE
+No credentials specified
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+ > git ls-remote -h -- https://github.com/mitmarcus/AU_SoftSec.git # timeout=10
+Found 2 remote heads on https://github.com/mitmarcus/AU_SoftSec.git
+Ignoring refs/heads/fix-readme-link as it doesn't match any of the configured refspecs
+[poll] Latest remote head revision on refs/heads/main is: 7a0ca4c7d448f2874bb60185bed0b573bd3fa049
+Done. Took 0.83 sec
+Changes found
