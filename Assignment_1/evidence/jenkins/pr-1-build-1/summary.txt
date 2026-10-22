@@ -1,0 +1,6 @@
+Jenkins job: cleaning (Multibranch Pipeline), pull request PR-1 (branch test-pr), build 1
+Started:  2026-10-22 23:19 UTC
+Trigger:  BranchIndexingCause
+Revision: 7899369ff3332937182b3ef281c27987a80b650b (PR-1)
+Tests:    3 passed in 0.04s | 25 passed in 5.68s
+Result:   SUCCESS
