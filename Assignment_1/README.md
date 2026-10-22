@@ -19,7 +19,7 @@ Protected: each cleaner's time entries, hourly rate and payslips.
 - `tests/`: functional, authorization and exploit tests (`tests/exploits/`).
 - `Jenkinsfile`, `jenkins/`: CI pipeline and the Jenkins image to run it.
 - `evidence/`: pipeline output for `v1-vulnerable` and `v2-fixed`.
-- `docs/`: [architecture](docs/ARCHITECTURE.md), [threat model](docs/THREAT_MODEL.md), [access control](docs/ACCESS_CONTROL.md), [vulnerabilities](docs/VULNERABILITIES.md), [plan](docs/PLAN.md), [decisions](docs/DECISIONS.md), [report](docs/REPORT.md).
+- `docs/`: [architecture](docs/ARCHITECTURE.md), [threat model](docs/THREAT_MODEL.md), [access control](docs/ACCESS_CONTROL.md), [vulnerabilities](docs/VULNERABILITIES.md), [plan](docs/PLAN.md), [decisions](docs/DECISIONS.md), [report](docs/report/report.pdf) ([source](docs/report/report.tex)), [AI declaration](docs/AI_DECLARATION.md).
 
 ```mermaid
 flowchart LR
